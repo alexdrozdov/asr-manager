@@ -120,6 +120,7 @@ class Ticket(object):
         self.id_track.append(self.id)
         self.data = data
         self.description = description
+        self.sticky_data = {}
     def create_ticket(self, data_id, data, id = None, description = None):
         if None==description:
             description = self.description
@@ -154,7 +155,20 @@ class Ticket(object):
                 return p
             p = p.parent_ticket
         return None
-
+    def add_sticky(self, caption, value):
+        self.sticky_data[caption] = value
+    def get_sticky(self, caption):
+        return self.sticky_data[caption]
+    def find_ticket_by_sticky(self, caption):
+        if self.sticky_data.has_key(caption):
+            return self
+        p = self.parent_ticket
+        while None != p:
+            if p.sticky_data.has_key(caption):
+                return p
+            p = p.parent_ticket
+        return None
+    
 class StanaloneTicket(Ticket):
     def __init__(self, ticket):
         self.man = None

@@ -95,23 +95,26 @@ class TicketIdStore:
     def __init__(self):
         self.last_id = 0
     def get_id(self):
-        id = self.last_id
+        lid = self.last_id
         self.last_id += 1
-        return id
+        return lid
+    def set_last_id_low_limit(self, last_id):
+        if self.last_id < last_id:
+            self.last_id = last_id
 
 global_ticket_id_store = TicketIdStore()
 
 class Ticket(object):
-    def __init__(self, manager, data_id, data, parent_ticket = None, id=None, description = None):
+    def __init__(self, manager, data_id, data, parent_ticket = None, tid=None, description = None):
         self.man = manager
         self.data_id = self.man.get_data_id(data_id)
         self.parent_ticket = parent_ticket
         self.children = []
         self.tis = TicketIdStore()
-        if None==id:
+        if None==tid:
             self.id = global_ticket_id_store.get_id()
         else:
-            self.id = id
+            self.id = tid
         if None == self.parent_ticket:
             self.id_track = []
         else:
@@ -121,12 +124,12 @@ class Ticket(object):
         self.data = data
         self.description = description
         self.sticky_data = {}
-    def create_ticket(self, data_id, data, id = None, description = None):
+    def create_ticket(self, data_id, data, tid = None, description = None):
         if None==description:
             description = self.description
-        if None==id:
-            id = self.tis.get_id()
-        t = Ticket(self.man, data_id, data, self, id, description)
+        if None==tid:
+            tid = self.tis.get_id()
+        t = Ticket(self.man, data_id, data, self, tid, description)
         return t
     def get_data(self):
         return self.data
@@ -181,7 +184,7 @@ class StanaloneTicket(Ticket):
         self.description = copy.deepcopy(ticket.description)
         self.data_name = ticket.get_data_name()
         self.data_tag = ticket.get_data_tag()
-    def create_ticket(self, data_id, data, id = None, description = None):
+    def create_ticket(self, data_id, data, tid = None, description = None):
         raise u"StanaloneTicket не поддерживает создание других тикетов"
     def get_data(self):
         return self.data
@@ -279,6 +282,9 @@ class Manager:
         self.lock.acquire()
         self.queue.append(qt)
         self.lock.release()
+        
+    def set_ticketid_low_limit(self, low_limit):
+        global_ticket_id_store.set_last_id_low_limit(low_limit)
 
     def ticket(self, data_id, data, description = None):
         t = Ticket(self, data_id, data, description = description)

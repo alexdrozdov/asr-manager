@@ -39,7 +39,7 @@ class ViewerWrapper(object):
         ViewManager перед тем, как сопоставить тикет с этим классом отображения
         Вернуть True, если класс может отобразить такой тикет, вернуть False,
         если отображение такого тикета невозможно"""
-        print "Метод проверки не реализован. По-умолчанию считаем, что отображать этот тикеть невозможно"
+        print "Метод проверки не реализован. По-умолчанию считаем, что отображать этот тикет возможно"
         return True
     def view(self, kwargs):
         pass
@@ -94,20 +94,31 @@ def YesNo(parent, question, caption = 'Yes or no?'):
     result = dlg.ShowModal() == wx.ID_YES
     dlg.Destroy()
     return result
-    
+
+class ViewTicket:
+    def __init__(self, ticket, view_wrapper=None, viewer_caption=None, viewer_id=None):
+        self.ticket = ticket
+        self.view_manager = ViewManager()
+        self.results_to_view = ResultsToView(self.view_manager)
+        if None==view_wrapper and None==viewer_caption and None==viewer_id:
+            raise ValueError(u"Не указан метод отображения тикета")
+        self.results_to_view.add_ticket(ticket, view_wrapper)
+    def show(self):
+        self.results_to_view.show_results()
+
 class ResultsToView:
     def __init__(self, view_manager):
         self.view_manager = view_manager
         self.view_list = []
-    def add_ticket(self, ticket, viewer_id=None):
-        if None == viewer_id:
+    def add_ticket(self, ticket, viewer=None):
+        if None == viewer:
             viewers_list = self.view_manager.get_ticket_capability_list(ticket)
             if len(viewers_list) < 1:
                 wx.MessageBox(u"Не удалось найти модуль для отображения, выберите модуль отображения из списка принудительно", u"Не модуля отображения", wx.OK)
                 return
             v = viewers_list[0]
         else:
-            v = self.view_manager.get_viewer_by_id(viewer_id)
+            v = viewer
             if not v.check_view_capability(ticket):
                 wx.MessageBox(u"Выбранное средство просмотра не поддерживает тикеты такого типа", u"Отображение невозможно", wx.OK)
                 return

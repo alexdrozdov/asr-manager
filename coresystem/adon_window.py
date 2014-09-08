@@ -51,7 +51,6 @@ class AdonWindow(object):
     def on_form_show(self, event):
         try:
             show = event.GetShow()
-            print show
             localdb.db.write_persistent(self.autoopen_db_path, show)
         except:
             print traceback.format_exc()

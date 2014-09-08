@@ -7,7 +7,7 @@ import wx.grid
 import manager.manager as ms
 import test_adons_tree as at
 import adon
-
+#import manager.adon_window
 
 class FrameInfo:
     def __init__(self, frame, description, iden_wind):
@@ -40,15 +40,14 @@ class GuiInfo:
 class Frame(loader_interface.LoaderFrame):
     def __init__(self):
         loader_interface.LoaderFrame.__init__(self, None, -1, "")
+        #manager.adon_window.AdonWindow.__init__(self, window_id='', window_caption='', default_size=(410,500), default_pos=(60,60))
         self.Bind(wx.EVT_CLOSE, self.on_form_close, self)
         self.listModules.InsertColumn(0, u'Компоненты')
         self.listModules.SetColumnWidth(0, 400)
-        self.SetSize(wx.Size(410,500))
         self.gui_count = 0
         self.gui_frames = []
         self.adons = adon.AdonsManager(man, gui)
         self.adons.load_adons()
-
     def listModules_on_activate(self, event):
         try:
             itm = self.listModules.GetFirstSelected()
@@ -95,6 +94,7 @@ def def_params(localdb):
 def init_database():
     sys.path.append('./manager')
     import localdb
+    import adon_window
     localdb.init_localdb("localdb.pickle", def_params)
 
 

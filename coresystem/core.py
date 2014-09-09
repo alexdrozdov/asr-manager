@@ -39,7 +39,7 @@ class GuiInfo:
 class Frame(loader_interface.LoaderFrame, adon_window.AdonWindow):
     def __init__(self):
         loader_interface.LoaderFrame.__init__(self, None, -1, "")
-        adon_window.AdonWindow.__init__(self, window_id='', window_caption='', default_size=(410,500), default_pos=(60,60))
+        adon_window.AdonWindow.__init__(self, window_id='wnd_main_gui', window_caption='', default_size=(410,500), default_pos=(60,60), default_top_most=True)
         self.Bind(wx.EVT_CLOSE, self.on_form_close, self)
         self.listModules.InsertColumn(0, u'Компоненты')
         self.listModules.SetColumnWidth(0, 400)

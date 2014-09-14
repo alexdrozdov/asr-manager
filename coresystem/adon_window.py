@@ -66,7 +66,7 @@ class AdonWindow(object):
             print traceback.format_exc()
         event.Skip()
     def on_form_close(self, event):
-        event.Skip()
+        self.Hide()
     def restore_pos_and_size(self):
         if None != self.pos:
             self.SetPosition(wx.Point(self.pos[0], self.pos[1]))

@@ -3,12 +3,14 @@
 
 
 import wx, interface_adonstree
+import adon_window
 #import daemons
 
 
-class Frame_AdonsTree(interface_adonstree.AdonsTree):
+class Frame_AdonsTree(interface_adonstree.AdonsTree, adon_window.AdonWindow):
     def __init__(self):
         interface_adonstree.AdonsTree.__init__(self, None, -1, "")
+        adon_window.AdonWindow.__init__(self, window_id='wnd_adons_tree', window_caption='', default_size=(410,500))
         self.ok = False
         self.tree = None
         self.reload = False

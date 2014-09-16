@@ -14,6 +14,13 @@ def def_params(localdb):
 def init_database():
     localdb_path = "./localdb.pickle"
     try:
+        config_dir = os.environ['CONFIG_DIR']
+        localdb_path = os.path.join(config_dir, 'localdb.pickle')
+        if not os.path.exists(config_dir):
+            os.mkdir(config_dir)
+    except:
+        pass
+    try:
         localdb_path = os.environ['LOCALDB_PATH']
     except:
         pass

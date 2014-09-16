@@ -11,6 +11,7 @@ syntax: glob
 *.orig
 *.pyc
 *.kdev4
+*.pickle
 .cproject
 .project
 disabled-adons.txt

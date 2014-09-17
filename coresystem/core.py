@@ -35,7 +35,6 @@ class GuiInfo:
                 break
         wx.MessageBox(u"Модуль с иден-ром " + iden_wind + u" не найден. Проверьте дерево загруженных модулей", u"Ошибка", wx.OK)
 
-
 class Frame(loader_interface.LoaderFrame, adon_window.AdonWindow):
     def __init__(self):
         loader_interface.LoaderFrame.__init__(self, None, -1, "")
@@ -79,13 +78,10 @@ class Frame(loader_interface.LoaderFrame, adon_window.AdonWindow):
     def on_form_close(self, event):
         exit()
     def btnUpdateModules_on_click(self, event):
-        global gui
         self.adons.reload()
         self.listModules.DeleteAllItems()
         for g in gui.frames:
             loader_frame.add_gui(g.frame, g.description)
-
-global loader_frame
 
 def def_params(localdb):
     localdb.write_once("/db", None)
@@ -104,10 +100,12 @@ def run():
 
     global man
     global gui
+    global loader_frame
+
     man = ms.manager
     gui = GuiInfo()
-
     loader_frame = Frame()
+
     app.SetTopWindow(loader_frame)
     loader_frame.Show()
     for g in gui.frames:

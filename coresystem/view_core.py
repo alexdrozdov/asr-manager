@@ -3,6 +3,7 @@
 
 import localdb
 import re
+import wx
 
 class PlotterWrapper(object):
     def __init__(self, path):

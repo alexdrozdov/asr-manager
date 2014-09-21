@@ -14,23 +14,24 @@ class Frame_AdonsTree(interface_adonstree.AdonsTree, adon_window.AdonWindow):
         self.ok = False
         self.tree = None
         self.reload = False
-        #self.Bind(wx.EVT_CLOSE, self.btnClose_handler, self)
-    def btnOk_handler(self, event):  # wxGlade: AdonsTree.<event_handler>
+    def on_form_close(self, event):
+        event.Skip()
+    def btnOk_handler(self, event):
         self.ok = True
         self.Close()
 
-    def btnCancel_handler(self, event):  # wxGlade: AdonsTree.<event_handler>
+    def btnCancel_handler(self, event):
         self.SetReturnCode(wx.ID_CANCEL)
         self.Close()
 
-    def btnEnable_handler(self, event):  # wxGlade: AdonsTree.<event_handler>
+    def btnEnable_handler(self, event):
         for itm in self.tree_ctrl_1.GetSelections():
             tree = self.tree_ctrl_1.GetItemPyData(itm)
             tree.disabled = False
             self.tree_ctrl_1.SetItemBold(itm, True)
         event.Skip()
 
-    def btnDisable_handler(self, event):  # wxGlade: AdonsTree.<event_handler>
+    def btnDisable_handler(self, event):
         for itm in self.tree_ctrl_1.GetSelections():
             tree = self.tree_ctrl_1.GetItemPyData(itm)
             tree.disabled = True

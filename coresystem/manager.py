@@ -326,20 +326,23 @@ class Manager:
         self.lock.release()
     
     def _start_oper_cycle(self):
-        while True:
-            while self.has_tasks():
-                try:
-                    self.handle_once()
-                except:
-                    print "Exception while executing adon"
-                    print traceback.format_exc()
-            for daemon in self.daemons:
-                try:
-                    daemon()
-                except:
-                    print "Exception while executing daemon"
-                    print traceback.format_exc()
-            time.sleep(0.2)
+        try:
+            while True:
+                while self.has_tasks():
+                    try:
+                        self.handle_once()
+                    except:
+                        print "Exception while executing adon"
+                        print traceback.format_exc()
+                for daemon in self.daemons:
+                    try:
+                        daemon()
+                    except:
+                        print "Exception while executing daemon"
+                        print traceback.format_exc()
+                time.sleep(0.2)
+        except:
+            pass
 
     def reset(self):
         self.handlers = {}

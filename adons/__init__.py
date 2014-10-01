@@ -96,6 +96,7 @@ def adons_init(check_adond_disabled):
             continue
         group_path = os.path.join(local_path, adon_group)
         submodules = [o for o in os.listdir(group_path) if os.path.isdir(os.path.join(group_path,o)) and o!=".hg"]
+        submodules.sort()
         try:
             __all__.extend(copy.deepcopy(submodules))
         except:

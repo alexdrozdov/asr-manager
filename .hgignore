@@ -23,3 +23,5 @@ temporary/
 tests/
 control_file_name
 localdb.pickle
+thirdparty
+

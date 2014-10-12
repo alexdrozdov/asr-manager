@@ -4,6 +4,9 @@
 import sys
 import os
 sys.path.append('./coresystem')
+if os.path.exists('./thirdparty'):
+    print "Extending search path to", os.path.join(os.path.dirname(__file__),'thirdparty')
+    sys.path.append('./thirdparty')
 
 import localdb
 import core

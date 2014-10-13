@@ -3,10 +3,18 @@
 
 import sys
 import os
-sys.path.append('./coresystem')
-if os.path.exists('./thirdparty'):
-    print "Extending search path to", os.path.join(os.path.dirname(__file__),'thirdparty')
-    sys.path.append('./thirdparty')
+
+
+coresystem_d = os.path.join(os.path.dirname(__file__),'coresystem')
+if not os.path.exists(coresystem_d):
+    raise RuntimeError("Couldnt find coresystem directory, exiting now...")
+    exit(1)
+sys.path.append(coresystem_d)
+
+thirdparty = os.path.join(os.path.dirname(__file__),'thirdparty')
+if os.path.exists(thirdparty):
+    print "Extending search path to", thirdparty
+    sys.path.append(thirdparty)
 
 import localdb
 import core

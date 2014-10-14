@@ -93,6 +93,11 @@ def init_database():
     localdb.init_localdb("localdb.pickle", def_params)
 
 
+def init_coresystem_events(manager):
+    manager.add_data_id("core::load_complete", u"Coresystem initialization complete, all adons loaded", tag="undefined")
+    manager.add_data_id("core::idle", u"Coresystem main loop executed all pending events", tag="undefined")
+    manager.add_data_id("core::exception", u"Coresystem encountered exception while running user code", tag="exception")
+
 def run():
     app = wx.App(0)
     if wx.__version__ < "2.9":
@@ -103,6 +108,7 @@ def run():
     global loader_frame
 
     man = ms.manager
+    init_coresystem_events(man)
     gui = GuiInfo()
     loader_frame = Frame()
 
@@ -111,6 +117,7 @@ def run():
     for g in gui.frames:
         loader_frame.add_gui(g.frame, g.description)
     
+    man.push_ticket(man.ticket("core::load_complete", "Coresystem load is complete", description="Load complete"))
     man.start_async_operation()
     app.MainLoop()
 

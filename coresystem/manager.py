@@ -5,6 +5,7 @@ import copy
 import traceback
 import thread
 import time
+import coreexc
 
 class NoId(ValueError):
     pass
@@ -301,7 +302,9 @@ class Manager:
                     try:
                         self.handlers[qt.data_id][i](qt.data)
                     except:
-                        print "Exception while executing adon"
+                        e = coreexc.AdonRuntimeError()
+                        self.push_ticket(qt.data.create_ticket("core::exception", e))
+                        print "Error while running adon"
                         print traceback.format_exc()
 
     def print_handlers(self):

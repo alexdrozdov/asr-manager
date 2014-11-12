@@ -146,6 +146,8 @@ class Ticket(object):
         return self.man.dis.get_id_name(self.data_id)
     def get_data_tag(self):
         return self.man.dis.get_id_info(self.data_id).tag
+    def get_description(self):
+        return self.description
     def export_standalone_ticket(self):
         st = StanaloneTicket(self)
         return st

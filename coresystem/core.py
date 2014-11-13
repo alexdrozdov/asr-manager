@@ -7,6 +7,7 @@ import manager as ms
 import test_adons_tree as at
 import adon
 import adon_window
+import time
 
 class FrameInfo:
     def __init__(self, frame, description, iden_wind):
@@ -107,18 +108,32 @@ def run():
     global gui
     global loader_frame
 
+    if '--no-gui' in sys.argv:
+        no_gui = True
+    else:
+        no_gui = False
+
     man = ms.manager
     init_coresystem_events(man)
-    gui = GuiInfo()
-    loader_frame = Frame()
-
-    app.SetTopWindow(loader_frame)
-    loader_frame.Show()
-    for g in gui.frames:
-        loader_frame.add_gui(g.frame, g.description)
-    
+    if not no_gui:
+        gui = GuiInfo()
+        loader_frame = Frame()
+        app.SetTopWindow(loader_frame)
+        loader_frame.Show()
+        for g in gui.frames:
+            loader_frame.add_gui(g.frame, g.description)
+    else:
+        gui = None
+        loader_frame = None
+        nongui_adons = adon.AdonsManager(man, gui)
+        nongui_adons.load_adons()
     man.push_ticket(man.ticket("core::load_complete", "Coresystem load is complete", description="Load complete"))
     man.start_async_operation()
-    app.MainLoop()
+
+    if not no_gui:
+        app.MainLoop()
+    else:
+        while True:
+            time.sleep(1000)
 
 

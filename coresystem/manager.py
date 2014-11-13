@@ -6,6 +6,7 @@ import traceback
 import thread
 import time
 import coreexc
+import os
 
 class NoId(ValueError):
     pass
@@ -303,6 +304,8 @@ class Manager:
                 for i in range(len(self.handlers[qt.data_id])):
                     try:
                         self.handlers[qt.data_id][i](qt.data)
+                    except SystemExit:
+                        exit()
                     except:
                         e = coreexc.AdonRuntimeError()
                         self.push_ticket(qt.data.create_ticket("core::exception", e))
@@ -336,16 +339,24 @@ class Manager:
                 while self.has_tasks():
                     try:
                         self.handle_once()
+                    except SystemExit:
+                        exit()
+                        break
                     except:
                         print "Exception while executing adon"
                         print traceback.format_exc()
                 for daemon in self.daemons:
                     try:
                         daemon()
+                    except SystemExit:
+                        exit()
                     except:
                         print "Exception while executing daemon"
                         print traceback.format_exc()
                 time.sleep(0.2)
+                self.push_ticket(self.ticket("core::idle", "idle"))
+        except SystemExit:
+            os._exit(0)
         except:
             pass
 

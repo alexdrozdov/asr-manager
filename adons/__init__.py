@@ -147,4 +147,29 @@ def adons_init(check_adond_disabled):
                 print traceback.format_exc()
                 continue
     return tree
-        
+
+def load_user_adon(tree, adon_module_name):
+    def get_user_group(tree):
+        for m in tree.submodules:
+            if m.name=='adons-external':
+                return m
+        m = ModuleInfo('adons-external', None)
+        tree.add_submodule(m)
+        return m
+    ug = get_user_group(tree)
+    try:
+        ad = __import__(adon_module_name, globals(), locals())
+        obj = ad
+        filename = obj.__file__.replace('.pyc', '.py')
+        md5sum = hashlib.md5(open(filename, 'rb').read()).digest()
+        fcn = obj.init_module
+        mi = ModuleInfo(adon_module_name, obj, filename = filename, md5sum = md5sum)
+        mi.set_init_fcn(fcn)
+        ug.add_submodule(mi)
+    except:
+        print "Сбой при загрузке пакета "+adon_module_name+" из adons-external"
+        print traceback.format_exc()
+        mi = ModuleInfo(adon_module_name, None)
+        ug.add_submodule(mi)
+        mi.load_error = True
+

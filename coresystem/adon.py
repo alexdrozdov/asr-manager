@@ -3,6 +3,7 @@
 
 import glob
 import os
+import sys
 import pickle
 import traceback
 
@@ -62,6 +63,15 @@ class AdonsManager:
             print "Использование модулей невозможно из-за нарушения структуры каталога. Устраните причину и перезапустите программу"
             print "Возможно, приведенная ниже информация может помочь в решении проблемы"
             print traceback.format_exc()
+        remote_adons = self.get_cmdline_remote_adons()
+        if len(remote_adons)>0:
+            try:
+                print "Scaning user specified adons"
+                for ra in remote_adons:
+                    self.ad.load_user_adon(self.tree, ra)
+            except:
+                print traceback.format_exc()
+            #self.ad.load_user_adon(self.tree, 'useradon2')
 
     def load_adons(self, tree = None):
         if None == tree:
@@ -83,6 +93,12 @@ class AdonsManager:
     def reload(self):
         self.tree.reload(self.man, self.gui)
 
+    def get_cmdline_remote_adons(self):
+        remote_adons = []
+        for v in sys.argv:
+            if '--load-adon=' in v:
+                remote_adons.append(v.split("=")[1])
+        return remote_adons
     def print_adons(self):
         if None != self.tree:
             self.tree.print_modules()

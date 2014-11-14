@@ -16,6 +16,15 @@ if os.path.exists(thirdparty):
     print "Extending search path to", thirdparty
     sys.path.append(thirdparty)
 
+for v in sys.argv:
+    if '--module-dir=' in v:
+        mod_path = v.split('=')[1].replace('"','').replace("'","").strip()
+        mod_path = os.path.realpath(mod_path)
+        if not os.path.exists(mod_path):
+            print "Couldnt extend path to"+mod_path+": path doesnt exist"
+        print "Extending search path to", mod_path
+        sys.path.append(mod_path)
+
 import localdb
 import core
 
